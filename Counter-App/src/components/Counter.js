@@ -4,8 +4,8 @@ import { counterActions } from "../store/index";
 
 const Counter = () => {
   // To access each state from the store (a group or collections of state) then we have to create var for each one.
-  const counter = useSelector((store) => store?.counter); // To get the state of the store at any pont in time.
-  const show = useSelector((store) => store?.showCounter); // To get the state of the store at any pont in time.
+  const counter = useSelector((store) => store?.counter.counterVal); // To get the state of the store at any pont in time. Here the first counter is identifier for the counter slice as we have 2 slice in our store and the 2nd counter is for the state value.
+  const show = useSelector((store) => store?.counter.showCounter); // To get the state of the store at any pont in time.
 
   const dispatch = useDispatch(); // This will return a dispatch function, which we can use inside our code, to trigger the reducer function inside the Redux store.
 

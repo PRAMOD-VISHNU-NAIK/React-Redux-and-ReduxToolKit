@@ -2,25 +2,25 @@
 
 import {configureStore, createSlice} from '@reduxjs/toolkit'
 
-const initialState = {
-    counter : 0, showCounter: true
+const initialCounterState = {
+    counterVal : 0, showCounter: true
 };
 
 // ----------------------------------------------Redux ToolKit----------------------------------------------
 // Here we will create a slice of our global state.
 const counterSlice = createSlice({
     name: 'counter',        // Every Slice require a name as a identifier.
-    initialState,           // Modern JS Syntax to ommit key-val pair in case both have same name.     
+    initialState: initialCounterState,           // Modern JS Syntax to ommit key-val pair in case both have same name.     
     reducers: {             // This includes all the reducer funtion that this slides needs.
         // These methods will be called by react and Every method will receive the current sate and action by default. Here we no need a if statement to check for the dispatch this will be take care by redux toolkit.
         increment(state) {
-            state.counter++;            // This is not allowed in redux but possible in redux toolkit because of Immer. Which will ditext code like this and it will automatically clne the existing state and creates the new state object and keeps all state which are not editing and override the state which we are editing in a immutable way. So we no need to create a copy of existing state manually using ... as we do in redux.  
+            state.counterVal++;            // This is not allowed in redux but possible in redux toolkit because of Immer. Which will ditext code like this and it will automatically clne the existing state and creates the new state object and keeps all state which are not editing and override the state which we are editing in a immutable way. So we no need to create a copy of existing state manually using ... as we do in redux.  
         },     
         decrement(state) {
-            state.counter--;
+            state.counterVal--;
         },
         increase(state, action) {
-            state.counter = state.counter + action.payload;
+            state.counterVal = state.counterVal + action.payload;
         },
         toggleCounter(state) {
             state.showCounter = !state.showCounter;
@@ -28,14 +28,32 @@ const counterSlice = createSlice({
     }
 });
 
-export const counterActions = counterSlice.actions;   // This will get the access to all the reducer methods we defined.
+const initialAuthState = {isAuthenticated: false}
+
+const authSlice = createSlice({
+    name: 'authentication',
+    initialState: initialAuthState,
+    reducers: {
+        login(state){
+            state.isAuthenticated = true;
+        },
+
+        logout(state){
+            state.isAuthenticated = false;
+        }
+    }
+})
+
+export const counterActions = counterSlice.actions;   // This will get the access to all the reducer methods or actions we defined.
+export const authActions = authSlice.actions;
 
 // const store = createStore(counterSlice.reducer);   // By doing this we will get access all our reducers function inside counterSlice
 // But the problem with createStore is that we can pass only one reducer can be passed. TO avoid this we ca use configureStore as below
 
 // By using configureStore we can have multiple reducers into one, from diff slices.
+// make sure that we have only one redux store irrespective of any number of slices.
 const store = configureStore({
-    reducer: counterSlice.reducer,
+    reducer: {counter: counterSlice.reducer, auth: authSlice.reducer}       // These individual reducers will then automatically merged together into one main reducer which is exposed to this store.
 });
 
 export default store;
